@@ -39,7 +39,7 @@ namespace System
             return Distribute(1 / count);
         }
 
-        public Money[] Distribute(Decimal distribution)
+        public Money[] Distribute(decimal distribution)
         {
             if (distribution > 1 || distribution <= 0)
             {
@@ -50,19 +50,19 @@ namespace System
                                                       "less than or equal to 1.0");
             }
 
-            _distribution = new Decimal[1];
+            _distribution = new decimal[1];
             _distribution[0] = distribution;
 
-            Int32 distributionCount = (Int32)Math.Floor(1 / distribution);
-            Money[] result = new Money[distributionCount];
+            var distributionCount = (Int32)Math.Floor(1 / distribution);
+            var result = new Money[distributionCount];
 
             _distributedTotal = new Money(0, _toDistribute.Currency);
-            Decimal quantum = (Decimal)Math.Pow(10, -(Int32)_precision);
+            decimal quantum = (Decimal)Math.Pow(10, -(Int32)_precision);
 
             for (int i = 0; i < distributionCount; i++)
             {
-                Decimal toDistribute = _toDistribute;
-                Decimal part = toDistribute / distributionCount;
+                var toDistribute = _toDistribute;
+                var part = toDistribute / distributionCount;
                 part = Math.Round(part - (0.5M * quantum),
                                   (Int32)_precision,
                                   MidpointRounding.AwayFromZero);
@@ -70,19 +70,19 @@ namespace System
                 _distributedTotal += part;
             }
 
-            Money remainder = _toDistribute - _distributedTotal;
+            var remainder = _toDistribute - _distributedTotal;
 
             switch (_receiver)
             {
                 case FractionReceivers.FirstToLast:
-                    for (Int32 i = 0; i < remainder / quantum; i++)
+                    for (var i = 0; i < remainder / quantum; i++)
                     {
                         result[i] += quantum;
                         _distributedTotal += quantum;
                     }
                     break;
                 case FractionReceivers.LastToFirst:
-                    for (Int32 i = (Int32)(remainder / quantum); i > 0; i--)
+                    for (var i = (Int32)(remainder / quantum); i > 0; i--)
                     {
                         result[i] += quantum;
                         _distributedTotal += quantum;
@@ -105,9 +105,9 @@ namespace System
             return result;
         }
 
-        public Money[] Distribute(Decimal distribution1, Decimal distribution2)
+        public Money[] Distribute(decimal distribution1, decimal distribution2)
         {
-            Decimal distributionSum = distribution1 + distribution2;
+            var distributionSum = distribution1 + distribution2;
 
             if (distributionSum <= 0 || distributionSum > 1)
             {
@@ -116,13 +116,13 @@ namespace System
                                             "less than or equal to 1");
             }
 
-            Money[] result = new Money[2];
+            var result = new Money[2];
             throw new NotImplementedException();
         }
 
-        public Money[] Distribute(Decimal distribution1,
-                                  Decimal distribution2,
-                                  Decimal distribution3)
+        public Money[] Distribute(decimal distribution1,
+                                  decimal distribution2,
+                                  decimal distribution3)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using Xunit;
 
 namespace System.Tests
@@ -8,10 +10,11 @@ namespace System.Tests
         [Fact]
         public void MoneyHasValueEquality()
         {
-            Money money1 = new Money(101.5M);
-            Money money2 = new Money(101.5M);
+            var money1 = new Money(101.5M);
+            var money2 = new Money(101.5M);
 
             Assert.Equal(money1, money2);
+            Assert.NotSame(money1, money2);
         }
 
         [Fact]
@@ -82,7 +85,6 @@ namespace System.Tests
             Money money2 = 0.01M;
 
             Assert.Equal(new Money(100.01M), money1 + money2);
-
         }
 
         [Fact]
@@ -330,16 +332,19 @@ namespace System.Tests
         [Fact]
         public void MoneyPrintsCorrectly()
         {
-            Money money = new Money(100.125M, Currency.Usd);
-            String formattedMoney = money.ToString();
+            var previousCulture = Thread.CurrentThread.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            var money = new Money(100.125M, Currency.Usd);
+            var formattedMoney = money.ToString();
             Assert.Equal("$100.13", formattedMoney);
+            Thread.CurrentThread.CurrentCulture = previousCulture;
         }
 
         [Fact]
         public void MoneyOperationsInvolvingDifferentCurrencyAllFail()
         {
-            Money money1 = new Money(101.5M, Currency.Aud);
-            Money money2 = new Money(98.5M, Currency.Cad);
+            var money1 = new Money(101.5M, Currency.Aud);
+            var money2 = new Money(98.5M, Currency.Cad);
             Money m;
             Boolean b;
 
@@ -351,6 +356,28 @@ namespace System.Tests
             Assert.Throws<InvalidOperationException>(() => { b = money1 < money2; });
             Assert.Throws<InvalidOperationException>(() => { b = money1 >= money2; });
             Assert.Throws<InvalidOperationException>(() => { b = money1 <= money2; });
+        }
+
+        [Fact]
+        public void MoneyTryParseIsCorrect()
+        {
+            var usd = "$123.45";
+            var gbp = "£123.45";
+            var cad = "CAD123.45";
+
+            Money actual;
+
+            var result = Money.TryParse(usd, out actual);
+            Assert.True(result);
+            Assert.Equal(new Money(123.45M, Currency.Usd), actual);
+
+            result = Money.TryParse(gbp, out actual);
+            Assert.True(result);
+            Assert.Equal(new Money(123.45M, Currency.Gbp), actual);
+
+            result = Money.TryParse(cad, out actual);
+            Assert.True(result);
+            Assert.Equal(new Money(123.45M, Currency.Cad), actual);
         }
     }
 }

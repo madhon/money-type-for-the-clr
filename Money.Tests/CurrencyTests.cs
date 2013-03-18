@@ -9,8 +9,9 @@ namespace System.Tests
         [Fact]
         public void CurrencyFromCurrentCultureEqualsCurrentCultureCurrency()
         {
-            Currency currency1 = new Currency(new RegionInfo(CultureInfo.CurrentCulture.LCID).ISOCurrencySymbol);
-            Currency currency2 = Currency.FromCurrentCulture();
+            // NOTE: I think this test could fail in certain cultures...
+            var currency1 = new Currency(new RegionInfo(CultureInfo.CurrentCulture.LCID).ISOCurrencySymbol);
+            var currency2 = Currency.FromCurrentCulture();
 
             Assert.Equal(currency1.Name, currency2.Name);
             Assert.Equal(currency1.Symbol, currency2.Symbol);
@@ -21,7 +22,7 @@ namespace System.Tests
         [Fact]
         public void CurrencyFromSpecificCultureInfoIsCorrect()
         {
-            Currency currency = Currency.FromCultureInfo(new CultureInfo(1052));
+            var currency = Currency.FromCultureInfo(new CultureInfo(1052));
 
             Assert.Equal(8, currency.IsoNumericCode);
         }
@@ -29,7 +30,7 @@ namespace System.Tests
         [Fact]
         public void CurrencyFromSpecificIsoCodeIsCorrect()
         {
-            Currency currency = Currency.FromIso3LetterCode("EUR");
+            var currency = Currency.FromIso3LetterCode("EUR");
             
             Assert.Equal(978, currency.IsoNumericCode);
         }
@@ -37,9 +38,9 @@ namespace System.Tests
         [Fact]
         public void CurrencyHasValueEquality()
         {
-            Currency currency1 = new Currency("USD");
-            Currency currency2 = new Currency("USD");
-            Object boxedCurrency2 = currency2;
+            var currency1 = new Currency("USD");
+            var currency2 = new Currency("USD");
+            object boxedCurrency2 = currency2;
 
             Assert.True(currency1.Equals(currency2));
             Assert.True(currency1.Equals(boxedCurrency2));

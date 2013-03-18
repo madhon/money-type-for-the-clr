@@ -52,9 +52,12 @@
   <ItemGroup>
     <Compile Include="Currency.cs" />
     <Compile Include="FractionReceivers.cs" />
+    <Compile Include="MersenneTwister.cs" />
+    <Compile Include="MidpointRoundingRule.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="MoneyAllocationException.cs" />
     <Compile Include="MoneyDistributor.cs" />
+    <Compile Include="MoneyExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoundingPlaces.cs" />
   </ItemGroup>
