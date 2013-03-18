@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Money", "Money\Money.csproj", "{F2416D95-7587-4634-8061-D6B01C6163DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Money.Tests", "Money.Tests\Money.Tests.csproj", "{F11B6673-FDAF-4F81-8CD5-6E0BF3FA4350}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2416D95-7587-4634-8061-D6B01C6163DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2416D95-7587-4634-8061-D6B01C6163DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2416D95-7587-4634-8061-D6B01C6163DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2416D95-7587-4634-8061-D6B01C6163DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F11B6673-FDAF-4F81-8CD5-6E0BF3FA4350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F11B6673-FDAF-4F81-8CD5-6E0BF3FA4350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F11B6673-FDAF-4F81-8CD5-6E0BF3FA4350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F11B6673-FDAF-4F81-8CD5-6E0BF3FA4350}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
