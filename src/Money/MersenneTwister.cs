@@ -15,12 +15,12 @@ namespace System
         /// <summary>
         /// Period parameters M
         /// </summary>
-        private const Int32 N = 624;
+        private const Int32 M = 397;
 
         /// <summary>
         /// Period parameters N
         /// </summary>
-        private const Int32 M = 397;
+        private const Int32 N = 624;
 
         /// <summary>
         /// constant vector a
