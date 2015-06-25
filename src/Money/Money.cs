@@ -398,12 +398,12 @@
         /// </returns>
         public static Money operator *(Money left, Decimal right)
         {
-            return ((Decimal)left * right);
+            return new Money((Decimal)left * right, left.Currency);
         }
 
         public static Money operator /(Money left, Decimal right)
         {
-            return ((Decimal)left / right);
+            return new Money((Decimal)left / right, left.Currency);
         }
 
         public static Boolean operator ==(Money left, Money right)
