@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace System
+﻿namespace System
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Generates pseudo-random numbers using the Mersenne Twister algorithm.
     /// </summary>

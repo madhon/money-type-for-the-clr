@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace System
+﻿namespace System
 {
+    using System;
+
     public class MoneyDistributor
     {
         private readonly Money _toDistribute;

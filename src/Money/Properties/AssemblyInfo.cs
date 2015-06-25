@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Money")]
@@ -11,6 +12,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
+
+[assembly: CLSCompliant(true)]
 
 [assembly: Guid("2945d4d2-56b5-407b-8f53-23ea2207fcf5")]
 

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading;
-
-namespace System
+﻿namespace System
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Threading;
+
     /// <summary>
     ///     Represents a system of money within which <see cref="Money" />
     ///     amounts can be compared and arithmetic can be performed.

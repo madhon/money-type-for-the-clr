@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-
-namespace System
+﻿namespace System
 {
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+
     /// <summary>
     /// Represents a decimal amount of a specific <see cref="Currency"/>.
     /// </summary>

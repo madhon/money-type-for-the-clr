@@ -1,8 +1,8 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace System
+﻿namespace System
 {
+    using System;
+    using System.Runtime.Serialization;
+
     [Serializable]
     public class MoneyAllocationException : Exception
     {
