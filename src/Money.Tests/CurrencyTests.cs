@@ -2,10 +2,13 @@
 {
     using System;
     using System.Globalization;
+    using NUnit.Framework;
     using Shouldly;
 
+    [TestFixture]
     public class CurrencyTests
     {
+        [Test]
         public void CurrencyFromCurrentCultureEqualsCurrentCultureCurrency()
         {
             //// NOTE: I think this test could fail in certain cultures...
@@ -18,6 +21,7 @@
             currency2.IsoNumericCode.ShouldBe(currency1.IsoNumericCode);
         }
 
+        [Test]
         public void CurrencyFromSpecificCultureInfoIsCorrect()
         {
             var currency = Currency.FromCultureInfo(new CultureInfo(1052));
@@ -25,6 +29,7 @@
             currency.IsoNumericCode.ShouldBe(8);
         }
 
+        [Test]
         public void CurrencyFromSpecificIsoCodeIsCorrect()
         {
             var currency = Currency.FromIso3LetterCode("EUR");
@@ -32,6 +37,7 @@
             currency.IsoNumericCode.ShouldBe(978);
         }
 
+        [Test]
         public void CurrencyHasValueEquality()
         {
             var currency1 = new Currency("USD");

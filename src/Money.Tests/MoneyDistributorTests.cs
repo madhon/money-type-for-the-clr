@@ -1,10 +1,13 @@
 ﻿namespace System.Tests
 {
     using System;
+    using NUnit.Framework;
     using Shouldly;
 
+    [TestFixture]
     public class MoneyDistributorTests
     {
+        [Test]
         public void UniformDistributionMustBeBetween0And1()
         {
             var distributor = new MoneyDistributor(1.0M, FractionReceivers.LastToFirst, RoundingPlaces.Two);
@@ -13,6 +16,7 @@
             Should.Throw<ArgumentOutOfRangeException>(() => distributor.Distribute(1.1M));
         }
 
+        [Test]
         public void DistributeUniformRatioToLastIsCorrect()
         {
             Money amountToDistribute = 0.05M;
@@ -40,7 +44,8 @@
             distribution[2].ShouldBe(new Money(0.0166667M));
         }
 
-        private void DistributeNonuniformRatiosToLastIsCorrect()
+        [Test]
+        public void DistributeNonuniformRatiosToLastIsCorrect()
         {
             Money amountToDistribute = 0.05M;
 

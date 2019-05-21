@@ -134,7 +134,6 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        [CLSCompliant(false)]
         public static implicit operator Money(SByte value)
         {
             return new Money(value);
@@ -247,7 +246,6 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        [CLSCompliant(false)]
         public static implicit operator Money(UInt16 value)
         {
             return new Money(value);
@@ -262,7 +260,6 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        [CLSCompliant(false)]
         public static implicit operator Money(UInt32 value)
         {
             return new Money(value);
@@ -277,7 +274,6 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        [CLSCompliant(false)]
         public static implicit operator Money(UInt64 value)
         {
             return new Money(value);
@@ -691,7 +687,6 @@
             throw new NotSupportedException();
         }
 
-        [CLSCompliant(false)]
         public SByte ToSByte(IFormatProvider provider)
         {
             return (SByte)computeValue();
@@ -707,7 +702,6 @@
             return (Int16)computeValue();
         }
 
-        [CLSCompliant(false)]
         public UInt16 ToUInt16(IFormatProvider provider)
         {
             return (UInt16)computeValue();
@@ -718,7 +712,6 @@
             return (Int32)computeValue();
         }
 
-        [CLSCompliant(false)]
         public UInt32 ToUInt32(IFormatProvider provider)
         {
             return (UInt32)computeValue();
@@ -729,7 +722,6 @@
             return (Int64)computeValue();
         }
 
-        [CLSCompliant(false)]
         public UInt64 ToUInt64(IFormatProvider provider)
         {
             return (UInt64)computeValue();

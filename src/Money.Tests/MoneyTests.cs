@@ -1,12 +1,14 @@
-﻿using System;
-using System.Globalization;
-using System.Threading;
-using Shouldly;
-
-namespace System.Tests
+﻿namespace System.Tests
 {
+    using Globalization;
+    using NUnit.Framework;
+    using Shouldly;
+    using Threading;
+
+    [TestFixture]
     public class MoneyTests
     {
+        [Test]
         public void MoneyHasValueEquality()
         {
             var money1 = new Money(101.5M);
@@ -15,6 +17,7 @@ namespace System.Tests
             money2.ShouldBe(money1);
         }
 
+        [Test]
         public void MoneyImplicitlyConvertsFromPrimitiveNumbers()
         {
             Money money;
@@ -64,6 +67,7 @@ namespace System.Tests
             money.ShouldBe(new Money(900));
         }
 
+        [Test]
         public void MoneyWholeAmountAdditionIsCorrect()
         {
             // whole number
@@ -73,6 +77,7 @@ namespace System.Tests
             (money1 + money2).ShouldBe(new Money(200));
         }
 
+        [Test]
         public void MoneyFractionalAmountAdditionIsCorrect()
         {
             // fractions
@@ -82,6 +87,7 @@ namespace System.Tests
             (money1 + money2).ShouldBe(new Money(100.01M));
         }
 
+        [Test]
         public void MoneyFractionalAmountWithOverflowAdditionIsCorrect()
         {
             // overflow
@@ -91,6 +97,7 @@ namespace System.Tests
             (money1 + money2).ShouldBe(new Money(101.899M));
         }
 
+        [Test]
         public void MoneyNegativeAmountAdditionIsCorrect()
         {
             // negative
@@ -100,6 +107,7 @@ namespace System.Tests
             (money1 + money2).ShouldBe(new Money(100.099M));
         }
 
+        [Test]
         public void MoneyNegativeAmountWithOverflowAdditionIsCorrect()
         {
             // negative overflow
@@ -109,6 +117,7 @@ namespace System.Tests
             (money1 + money2).ShouldBe(new Money(-101.899M));
         }
 
+        [Test]
         public void MoneyWholeAmountSubtractionIsCorrect()
         {
             // whole number
@@ -118,6 +127,7 @@ namespace System.Tests
             (money1 - money2).ShouldBe(new Money(2));
         }
 
+        [Test]
         public void MoneyFractionalAmountSubtractionIsCorrect()
         {
             // fractions
@@ -127,6 +137,7 @@ namespace System.Tests
             (money1 - money2).ShouldBe(new Money(99.99M));
         }
 
+        [Test]
         public void MoneyFractionalAmountWithOverflowSubtractionIsCorrect()
         {
             // overflow
@@ -136,6 +147,7 @@ namespace System.Tests
             (money1 - money2).ShouldBe(new Money(99.6M));
         }
 
+        [Test]
         public void MoneyNegativeAmountSubtractionIsCorrect()
         {
             // negative
@@ -145,6 +157,7 @@ namespace System.Tests
             (money1 - money2).ShouldBe(new Money(101.899M));
         }
 
+        [Test]
         public void MoneyNegativeAmountWithOverflowSubtractionIsCorrect()
         {
             // negative overflow
@@ -154,6 +167,7 @@ namespace System.Tests
             (money1 - money2).ShouldBe(new Money(-100.099M));
         }
 
+        [Test]
         public void MoneyScalarWholeMultiplicationIsCorrect()
         {
             Money money = 100.125;
@@ -161,6 +175,7 @@ namespace System.Tests
             (money * 5).ShouldBe(new Money(500.625M));
         }
 
+        [Test]
         public void MoneyScalarFractionalMultiplicationIsCorrect()
         {
             Money money = 100.125;
@@ -168,6 +183,7 @@ namespace System.Tests
             (money * 0.5M).ShouldBe(new Money(50.0625M));
         }
 
+        [Test]
         public void MoneyScalarNegativeWholeMultiplicationIsCorrect()
         {
             Money money = -100.125;
@@ -175,12 +191,14 @@ namespace System.Tests
             (money * 5).ShouldBe(new Money(-500.625M));
         }
 
+        [Test]
         public void MoneyScalarNegativeFractionalMultiplicationIsCorrect()
         {
             Money money = -100.125;
             (money * 0.5M).ShouldBe(new Money(-50.0625M));
         }
 
+        [Test]
         public void MoneyScalarWholeDivisionIsCorrect()
         {
             Money money = 100.125;
@@ -188,6 +206,7 @@ namespace System.Tests
             (money / 2).ShouldBe(new Money(50.0625M));
         }
 
+        [Test]
         public void MoneyScalarFractionalDivisionIsCorrect()
         {
             Money money = 100.125;
@@ -195,6 +214,7 @@ namespace System.Tests
             (money / 0.5M).ShouldBe(new Money(200.25M));
         }
 
+        [Test]
         public void MoneyScalarNegativeWholeDivisionIsCorrect()
         {
             Money money = -100.125;
@@ -202,12 +222,14 @@ namespace System.Tests
             (money / 2).ShouldBe(new Money(-50.0625M));
         }
 
+        [Test]
         public void MoneyScalarNegativeFractionalDivisionIsCorrect()
         {
             Money money = -100.125;
             (money / 0.5M).ShouldBe(new Money(-200.25M));
         }
 
+        [Test]
         public void MoneyEqualOperatorIsCorrect()
         {
             Money money1 = 100.125;
@@ -222,6 +244,7 @@ namespace System.Tests
             money1.ShouldNotBe(money2);
         }
 
+        [Test]
         public void MoneyNotEqualOperatorIsCorrect()
         {
             Money money1 = 100.125;
@@ -236,6 +259,7 @@ namespace System.Tests
             money1.ShouldNotBe(money2);
         }
 
+        [Test]
         public void MoneyLessGreaterThanEqualOperatorIsCorrect()
         {
             Money money1 = 100.125;
@@ -253,6 +277,7 @@ namespace System.Tests
             money1.ShouldBeLessThanOrEqualTo(money2);
         }
 
+        [Test]
         public void MoneyPrintsCorrectly()
         {
             var previousCulture = Thread.CurrentThread.CurrentCulture;
@@ -263,6 +288,7 @@ namespace System.Tests
             Thread.CurrentThread.CurrentCulture = previousCulture;
         }
 
+        [Test]
         public void MoneyOperationsInvolvingDifferentCurrencyAllFail()
         {
             var money1 = new Money(101.5M, Currency.Aud);
@@ -280,6 +306,7 @@ namespace System.Tests
             Should.Throw<InvalidOperationException>(() => { b = money1 <= money2; });
         }
 
+        [Test]
         public void MoneyTryParseIsCorrect()
         {
             var usd = "USD123.45";
