@@ -5,7 +5,7 @@
         public static Money[] Distribute(this Money money,
                                          FractionReceivers fractionReceivers,
                                          RoundingPlaces roundingPlaces,
-                                         Decimal distribution)
+                                         decimal distribution)
         {
             return new MoneyDistributor(money, fractionReceivers, roundingPlaces).Distribute(distribution);
         }
@@ -13,8 +13,8 @@
         public static Money[] Distribute(this Money money,
                                          FractionReceivers fractionReceivers,
                                          RoundingPlaces roundingPlaces,
-                                         Decimal distribution1,
-                                         Decimal distribution2)
+                                         decimal distribution1,
+                                         decimal distribution2)
         {
             return new MoneyDistributor(money, fractionReceivers, roundingPlaces).Distribute(distribution1,
                                                                                              distribution2);
@@ -23,9 +23,9 @@
         public static Money[] Distribute(this Money money,
                                          FractionReceivers fractionReceivers,
                                          RoundingPlaces roundingPlaces,
-                                         Decimal distribution1,
-                                         Decimal distribution2,
-                                         Decimal distribution3)
+                                         decimal distribution1,
+                                         decimal distribution2,
+                                         decimal distribution3)
         {
             return new MoneyDistributor(money, fractionReceivers, roundingPlaces).Distribute(distribution1,
                                                                                              distribution2,
@@ -35,7 +35,7 @@
         public static Money[] Distribute(this Money money,
                                          FractionReceivers fractionReceivers,
                                          RoundingPlaces roundingPlaces,
-                                         params Decimal[] distributions)
+                                         params decimal[] distributions)
         {
             return new MoneyDistributor(money, fractionReceivers, roundingPlaces).Distribute(distributions);
         }
@@ -43,7 +43,7 @@
         public static Money[] Distribute(this Money money,
                                          FractionReceivers fractionReceivers,
                                          RoundingPlaces roundingPlaces,
-                                         Int32 count)
+                                         int count)
         {
             return new MoneyDistributor(money, fractionReceivers, roundingPlaces).Distribute(count);
         }

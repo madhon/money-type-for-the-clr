@@ -22,47 +22,47 @@
         {
             Money money;
 
-            Byte byteValue = 50;
+            byte byteValue = 50;
             money = byteValue;
             money.ShouldBe(new Money(50));
 
-            SByte sByteValue = 75;
+            sbyte sByteValue = 75;
             money = sByteValue;
             money.ShouldBe(new Money(75));
 
-            Int16 int16Value = 100;
+            short int16Value = 100;
             money = int16Value;
             money.ShouldBe(new Money(100));
 
-            Int32 int32Value = 200;
+            int int32Value = 200;
             money = int32Value;
             money.ShouldBe(new Money(200));
 
-            Int64 int64Value = 300;
+            long int64Value = 300;
             money = int64Value;
             money.ShouldBe(new Money(300));
 
-            UInt16 uInt16Value = 400;
+            ushort uInt16Value = 400;
             money = uInt16Value;
             money.ShouldBe(new Money(400));
 
-            UInt32 uInt32Value = 500;
+            uint uInt32Value = 500;
             money = uInt32Value;
             money.ShouldBe(new Money(500));
 
-            UInt64 uInt64Value = 600;
+            ulong uInt64Value = 600;
             money = uInt64Value;
             money.ShouldBe(new Money(600));
 
-            Single singleValue = 700;
+            float singleValue = 700;
             money = singleValue;
             money.ShouldBe(new Money(700));
 
-            Double doubleValue = 800;
+            double doubleValue = 800;
             money = doubleValue;
             money.ShouldBe(new Money(800));
 
-            Decimal decimalValue = 900;
+            decimal decimalValue = 900;
             money = decimalValue;
             money.ShouldBe(new Money(900));
         }
@@ -294,7 +294,7 @@
             var money1 = new Money(101.5M, Currency.Aud);
             var money2 = new Money(98.5M, Currency.Cad);
             Money m;
-            Boolean b;
+            bool b;
 
             Should.Throw<InvalidOperationException>(() => { m = money1 + money2; });
             Should.Throw<InvalidOperationException>(() => { m = money1 - money2; });

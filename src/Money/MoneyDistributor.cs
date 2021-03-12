@@ -8,7 +8,7 @@
         private readonly FractionReceivers _receiver;
         private readonly RoundingPlaces _precision;
         private Money _distributedTotal;
-        private Decimal[] _distribution;
+        private decimal[] _distribution;
 
         public MoneyDistributor(Money amountToDistribute,
                                 FractionReceivers receiver,
@@ -19,13 +19,13 @@
             _precision = precision;
         }
 
-        public Money[] Distribute(params Decimal[] distribution)
+        public Money[] Distribute(params decimal[] distribution)
         {
             _distribution = distribution;
             throw new NotImplementedException();
         }
 
-        public Money[] Distribute(Int32 count)
+        public Money[] Distribute(int count)
         {
             if (count < 1)
             {
@@ -53,18 +53,18 @@
             _distribution = new decimal[1];
             _distribution[0] = distribution;
 
-            var distributionCount = (Int32)Math.Floor(1 / distribution);
+            var distributionCount = (int)Math.Floor(1 / distribution);
             var result = new Money[distributionCount];
 
             _distributedTotal = new Money(0, _toDistribute.Currency);
-            decimal quantum = (Decimal)Math.Pow(10, -(Int32)_precision);
+            var quantum = (decimal)Math.Pow(10, -(int)_precision);
 
             for (int i = 0; i < distributionCount; i++)
             {
                 var toDistribute = _toDistribute;
                 var part = toDistribute / distributionCount;
                 part = Math.Round(part - (0.5M * quantum),
-                                  (Int32)_precision,
+                                  (int)_precision,
                                   MidpointRounding.AwayFromZero);
                 result[i] = part;
                 _distributedTotal += part;
@@ -82,7 +82,7 @@
                     }
                     break;
                 case FractionReceivers.LastToFirst:
-                    for (var i = (Int32)(remainder / quantum); i > 0; i--)
+                    for (var i = (int)(remainder / quantum); i > 0; i--)
                     {
                         result[i] += quantum;
                         _distributedTotal += quantum;
@@ -116,7 +116,6 @@
                                             "less than or equal to 1");
             }
 
-            var result = new Money[2];
             throw new NotImplementedException();
         }
 

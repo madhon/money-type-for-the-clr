@@ -1,15 +1,14 @@
 ﻿namespace System
 {
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
+    using Diagnostics;
+    using Globalization;
 
     /// <summary>
     /// Represents a decimal amount of a specific <see cref="Currency"/>.
     /// </summary>
     [Serializable]
     [DebuggerDisplay("{getDebugView()}")]
-    public struct Money : IEquatable<Money>,
+    public readonly struct Money : IEquatable<Money>,
                           IComparable<Money>,
                           IFormattable,
                           IConvertible,
@@ -29,7 +28,7 @@
         /// <summary>
         /// The amount by which <see cref="_decimalFraction"/> has been scaled up to be a whole number.
         /// </summary>
-        private const Decimal FractionScale = 1E9M;
+        private const decimal FractionScale = 1E9M;
 
         /// <summary>
         /// The <see cref="Core.Money.Currency"/> this amount represents money in.
@@ -39,12 +38,12 @@
         /// <summary>
         /// The whole units of currency.
         /// </summary>
-        private readonly Int64 _units;
+        private readonly long _units;
 
         /// <summary>
         /// The fractional units of currency.
         /// </summary>
-        private readonly Int32 _decimalFraction;
+        private readonly int _decimalFraction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Money"/> struct equal to <paramref name="value"/>.
@@ -52,17 +51,17 @@
         /// <param name="value">
         /// The value.
         /// </param>
-        public Money(Decimal value)
+        public Money(decimal value)
         {
             checkValue(value);
 
-            _units = (Int64)value;
-            _decimalFraction = (Int32)Decimal.Round((value - _units) * FractionScale);
+            _units = (long)value;
+            _decimalFraction = (int)decimal.Round((value - _units) * FractionScale);
 
             if (_decimalFraction >= FractionScale)
             {
                 _units += 1;
-                _decimalFraction = _decimalFraction - (Int32)FractionScale;
+                _decimalFraction -= (int)FractionScale;
             }
 
             _currency = Currency.FromCurrentCulture();
@@ -78,7 +77,7 @@
         /// <param name="currency">
         /// The currency.
         /// </param>
-        public Money(Decimal value, Currency currency)
+        public Money(decimal value, Currency currency)
             : this(value)
         {
             _currency = currency;
@@ -96,7 +95,7 @@
         /// <param name="currency">
         /// The currency.
         /// </param>
-        private Money(Int64 units, Int32 fraction, Currency currency)
+        private Money(long units, int fraction, Currency currency)
         {
             _units = units;
             _decimalFraction = fraction;
@@ -106,10 +105,7 @@
         /// <summary>
         /// Gets the <see cref="Core.Money.Currency"/> which this money value is specified in.
         /// </summary>
-        public Currency Currency
-        {
-            get { return _currency.GetValueOrDefault(Currency.FromCurrentCulture()); }
-        }
+        public Currency Currency => _currency.GetValueOrDefault(Currency.FromCurrentCulture());
 
         /// <summary>
         /// Implicitly converts a <see cref="Byte"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
@@ -120,13 +116,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Byte value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(byte value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="SByte"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="sbyte"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -134,10 +127,7 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(SByte value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(sbyte value) => new Money(value);
 
         /// <summary>
         /// Implicitly converts a <see cref="Single"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
@@ -148,13 +138,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Single value)
-        {
-            return new Money((Decimal)value);
-        }
+        public static implicit operator Money(float value) => new Money((decimal)value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="Double"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="double"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -162,13 +149,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Double value)
-        {
-            return new Money((Decimal)value);
-        }
+        public static implicit operator Money(double value) => new Money((decimal)value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="Decimal"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="decimal"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -176,27 +160,21 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Decimal value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(decimal value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="Money"/> value to <see cref="Decimal"/> value.
+        /// Implicitly converts a <see cref="Money"/> value to <see cref="decimal"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
         /// </param>
         /// <returns>
-        /// A <see cref="Decimal"/> value which this <see cref="Money"/> value is equivalent to.
+        /// A <see cref="decimal"/> value which this <see cref="Money"/> value is equivalent to.
         /// </returns>
-        public static implicit operator Decimal(Money value)
-        {
-            return value.computeValue();
-        }
+        public static implicit operator decimal(Money value) => value.computeValue();
 
         /// <summary>
-        /// Implicitly converts a <see cref="Int16"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="short"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -204,13 +182,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Int16 value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(short value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="Int32"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="int"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -218,13 +193,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Int32 value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(int value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="Int64"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="long"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -232,13 +204,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(Int64 value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(long value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="UInt16"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="ushort"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -246,13 +215,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(UInt16 value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(ushort value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="UInt32"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="uint"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -260,13 +226,10 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(UInt32 value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(uint value) => new Money(value);
 
         /// <summary>
-        /// Implicitly converts a <see cref="UInt64"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
+        /// Implicitly converts a <see cref="ulong"/> value to <see cref="Money"/> with no <see cref="Currency"/> value.
         /// </summary>
         /// <param name="value">
         /// The value.
@@ -274,10 +237,7 @@
         /// <returns>
         /// A <see cref="Money"/> value with no <see cref="Currency"/> specified.
         /// </returns>
-        public static implicit operator Money(UInt64 value)
-        {
-            return new Money(value);
-        }
+        public static implicit operator Money(ulong value) => new Money(value);
 
         /// <summary>
         /// A negation operator for a <see cref="Money"/> value.
@@ -288,10 +248,7 @@
         /// <returns>
         /// The additive inverse (negation) of the given <paramref name="value"/>.
         /// </returns>
-        public static Money operator -(Money value)
-        {
-            return new Money(-value._units, -value._decimalFraction, value.Currency);
-        }
+        public static Money operator -(Money value) => new Money(-value._units, -value._decimalFraction, value.Currency);
 
         /// <summary>
         /// An identity operator for a <see cref="Money"/> value.
@@ -302,10 +259,7 @@
         /// <returns>
         /// The given <paramref name="value"/>.
         /// </returns>
-        public static Money operator +(Money value)
-        {
-            return value;
-        }
+        public static Money operator +(Money value) => value;
 
         /// <summary>
         /// An addition operator for two <see cref="Money"/> values.
@@ -338,7 +292,7 @@
             if (absFractionSum >= FractionScale)
             {
                 overflow = fractionSign;
-                absFractionSum -= (Int32)FractionScale;
+                absFractionSum -= (int)FractionScale;
                 fractionSum = fractionSign * absFractionSum;
             }
 
@@ -347,7 +301,7 @@
             if (fractionSign < 0 && Math.Sign(newUnits) > 0)
             {
                 newUnits -= 1;
-                fractionSum = (Int32)FractionScale - absFractionSum;
+                fractionSum = (int)FractionScale - absFractionSum;
             }
 
             return new Money(newUnits,
@@ -381,7 +335,7 @@
         }
 
         /// <summary>
-        /// A product operator for a <see cref="Money"/> value and a <see cref="Decimal"/> value.
+        /// A product operator for a <see cref="Money"/> value and a <see cref="decimal"/> value.
         /// </summary>
         /// <param name="left">
         /// The left operand.
@@ -392,47 +346,23 @@
         /// <returns>
         /// The product of <paramref name="left"/> and <paramref name="right"/>.
         /// </returns>
-        public static Money operator *(Money left, Decimal right)
-        {
-            return new Money((Decimal)left * right, left.Currency);
-        }
+        public static Money operator *(Money left, decimal right) => new Money((decimal)left * right, left.Currency);
 
-        public static Money operator /(Money left, Decimal right)
-        {
-            return new Money((Decimal)left / right, left.Currency);
-        }
+        public static Money operator /(Money left, decimal right) => new Money((decimal)left / right, left.Currency);
 
-        public static Boolean operator ==(Money left, Money right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Money left, Money right) => left.Equals(right);
 
-        public static Boolean operator !=(Money left, Money right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(Money left, Money right) => !left.Equals(right);
 
-        public static Boolean operator >(Money left, Money right)
-        {
-            return left.CompareTo(right) > 0;
-        }
+        public static bool operator >(Money left, Money right) => left.CompareTo(right) > 0;
 
-        public static Boolean operator <(Money left, Money right)
-        {
-            return left.CompareTo(right) < 0;
-        }
+        public static bool operator <(Money left, Money right) => left.CompareTo(right) < 0;
 
-        public static Boolean operator >=(Money left, Money right)
-        {
-            return left.CompareTo(right) >= 0;
-        }
+        public static bool operator >=(Money left, Money right) => left.CompareTo(right) >= 0;
 
-        public static Boolean operator <=(Money left, Money right)
-        {
-            return left.CompareTo(right) <= 0;
-        }
+        public static bool operator <=(Money left, Money right) => left.CompareTo(right) <= 0;
 
-        public static Boolean TryParse(String s, out Money money)
+        public static bool TryParse(string s, out Money money)
         {
             money = Zero;
 
@@ -443,16 +373,15 @@
 
             s = s.Trim();
 
-            if (s == String.Empty)
+            if (s.Length == 0)
             {
                 return false;
             }
 
             Currency? currency = null;
-            Currency currencyValue;
 
             // Check for currency symbol (e.g. $, £)
-            if (!Currency.TryParse(s.Substring(0, 1), out currencyValue))
+            if (!Currency.TryParse(s.Substring(0, 1), out var currencyValue))
             {
                 // Check for currency ISO code (e.g. USD, GBP)
                 if (s.Length > 2 && Currency.TryParse(s.Substring(0, 3), out currencyValue))
@@ -467,9 +396,7 @@
                 currency = currencyValue;
             }
 
-            Decimal value;
-
-            if (!Decimal.TryParse(s, out value))
+            if (!decimal.TryParse(s, out var value))
             {
                 return false;
             }
@@ -479,15 +406,11 @@
             return true;
         }
 
-        public Money Round(RoundingPlaces places, MidpointRoundingRule rounding = MidpointRoundingRule.ToEven)
-        {
-            Money remainder;
-            return Round(places, rounding, out remainder);
-        }
+        public Money Round(RoundingPlaces places, MidpointRoundingRule rounding = MidpointRoundingRule.ToEven) => Round(places, rounding, out var remainder);
 
         public Money Round(RoundingPlaces places, MidpointRoundingRule rounding, out Money remainder)
         {
-            Int64 unit;
+            long unit;
 
             var placesExponent = getExponentFromPlaces(places);
             var fraction = roundFraction(placesExponent, rounding, out unit);
@@ -497,9 +420,9 @@
             return new Money(units, fraction, Currency);
         }
 
-        private Int32 roundFraction(Int32 exponent, MidpointRoundingRule rounding, out Int64 unit)
+        private int roundFraction(int exponent, MidpointRoundingRule rounding, out long unit)
         {
-            var denominator = FractionScale / (Decimal)Math.Pow(10, exponent);
+            var denominator = FractionScale / (decimal)Math.Pow(10, exponent);
             var fraction = _decimalFraction / denominator;
 
             switch (rounding)
@@ -552,17 +475,17 @@
             if (fraction >= FractionScale)
             {
                 unit = 1;
-                fraction = fraction - (Int32)FractionScale;
+                fraction = fraction - (int)FractionScale;
             }
             else
             {
                 unit = 0;
             }
 
-            return (Int32)fraction;
+            return (int)fraction;
         }
 
-        private static Int32 getExponentFromPlaces(RoundingPlaces places)
+        private static int getExponentFromPlaces(RoundingPlaces places)
         {
             switch (places)
             {
@@ -591,15 +514,15 @@
             }
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
             unchecked
             {
                 return (397 * _units.GetHashCode()) ^ _currency.GetHashCode();
             }
         }
-
-        public override Boolean Equals(Object obj)
+        
+        public override bool Equals(object obj)
         {
             if (!(obj is Money))
             {
@@ -610,19 +533,7 @@
             return Equals(other);
         }
 
-        public override String ToString()
-        {
-            return computeValue().ToString("C", (IFormatProvider)_currency ?? NumberFormatInfo.CurrentInfo);
-        }
-
-        public String ToString(String format)
-        {
-            return computeValue().ToString(format, (IFormatProvider)_currency ?? NumberFormatInfo.CurrentInfo);
-        }
-
-        #region Implementation of IEquatable<Money>
-
-        public Boolean Equals(Money other)
+        public bool Equals(Money other)
         {
             checkCurrencies(other);
 
@@ -630,11 +541,7 @@
                    _decimalFraction == other._decimalFraction;
         }
 
-        #endregion
-
-        #region Implementation of IComparable<Money>
-
-        public Int32 CompareTo(Money other)
+        public int CompareTo(Money other)
         {
             checkCurrencies(other);
 
@@ -645,18 +552,11 @@
                        : unitCompare;
         }
 
-        #endregion
+        public override string ToString() => computeValue().ToString("C", (IFormatProvider)_currency ?? NumberFormatInfo.CurrentInfo);
 
-        #region Implementation of IFormattable
+        public string ToString(string format) => computeValue().ToString(format, (IFormatProvider)_currency ?? NumberFormatInfo.CurrentInfo);
 
-        public String ToString(String format, IFormatProvider formatProvider)
-        {
-            return computeValue().ToString(format, formatProvider);
-        }
-
-        #endregion
-
-        #region Implementation of IComparable
+        public string ToString(string format, IFormatProvider formatProvider) => computeValue().ToString(format, formatProvider);
 
         int IComparable.CompareTo(object obj)
         {
@@ -668,119 +568,61 @@
             throw new InvalidOperationException("Object is not a " + GetType() + " instance.");
         }
 
-        #endregion
+        public TypeCode GetTypeCode() => TypeCode.Object;
 
-        #region Implementation of IConvertible
-
-        public TypeCode GetTypeCode()
+        public bool ToBoolean(IFormatProvider provider)
         {
-            return TypeCode.Object;
+            if (_units == 0 && _decimalFraction == 0) return true;
+            return false;
         }
 
-        public Boolean ToBoolean(IFormatProvider provider)
-        {
-            return _units == 0 && _decimalFraction == 0;
-        }
+        public char ToChar(IFormatProvider provider) => throw new NotSupportedException();
 
-        public Char ToChar(IFormatProvider provider)
-        {
-            throw new NotSupportedException();
-        }
+        public sbyte ToSByte(IFormatProvider provider) => (sbyte)computeValue();
 
-        public SByte ToSByte(IFormatProvider provider)
-        {
-            return (SByte)computeValue();
-        }
+        public byte ToByte(IFormatProvider provider) => (byte)computeValue();
 
-        public Byte ToByte(IFormatProvider provider)
-        {
-            return (Byte)computeValue();
-        }
+        public short ToInt16(IFormatProvider provider) => (short)computeValue();
 
-        public Int16 ToInt16(IFormatProvider provider)
-        {
-            return (Int16)computeValue();
-        }
+        public ushort ToUInt16(IFormatProvider provider) => (ushort)computeValue();
 
-        public UInt16 ToUInt16(IFormatProvider provider)
-        {
-            return (UInt16)computeValue();
-        }
+        public int ToInt32(IFormatProvider provider) => (int)computeValue();
 
-        public Int32 ToInt32(IFormatProvider provider)
-        {
-            return (Int32)computeValue();
-        }
+        public uint ToUInt32(IFormatProvider provider) => (uint)computeValue();
 
-        public UInt32 ToUInt32(IFormatProvider provider)
-        {
-            return (UInt32)computeValue();
-        }
+        public long ToInt64(IFormatProvider provider) => (long)computeValue();
 
-        public Int64 ToInt64(IFormatProvider provider)
-        {
-            return (Int64)computeValue();
-        }
+        public ulong ToUInt64(IFormatProvider provider) => (ulong)computeValue();
 
-        public UInt64 ToUInt64(IFormatProvider provider)
-        {
-            return (UInt64)computeValue();
-        }
+        public float ToSingle(IFormatProvider provider) => (float)computeValue();
 
-        public Single ToSingle(IFormatProvider provider)
-        {
-            return (Single)computeValue();
-        }
+        public double ToDouble(IFormatProvider provider) => (double)computeValue();
 
-        public Double ToDouble(IFormatProvider provider)
-        {
-            return (Double)computeValue();
-        }
+        public decimal ToDecimal(IFormatProvider provider) => computeValue();
 
-        public Decimal ToDecimal(IFormatProvider provider)
-        {
-            return computeValue();
-        }
+        public DateTime ToDateTime(IFormatProvider provider) => throw new NotSupportedException();
 
-        public DateTime ToDateTime(IFormatProvider provider)
-        {
-            throw new NotSupportedException();
-        }
+        public string ToString(IFormatProvider provider) => ((decimal)this).ToString(provider);
 
-        public String ToString(IFormatProvider provider)
-        {
-            return ((Decimal)this).ToString(provider);
-        }
+        public object ToType(Type conversionType, IFormatProvider provider) => throw new NotSupportedException();
 
-        public Object ToType(Type conversionType, IFormatProvider provider)
-        {
-            throw new NotSupportedException();
-        }
+        private decimal computeValue() => _units + _decimalFraction / FractionScale;
 
-        #endregion
+        private static InvalidOperationException differentCurrencies() =>
+            new InvalidOperationException("Money values are in different " +
+                                          "currencies. Convert to the same " +
+                                          "currency before performing " +
+                                          "operations on the values.");
 
-        private Decimal computeValue()
+        private static void checkValue(decimal value)
         {
-            return _units + _decimalFraction / FractionScale;
-        }
-
-        private static InvalidOperationException differentCurrencies()
-        {
-            return new InvalidOperationException("Money values are in different " +
-                                                 "currencies. Convert to the same " +
-                                                 "currency before performing " +
-                                                 "operations on the values.");
-        }
-
-        private static void checkValue(Decimal value)
-        {
-            if (value < Int64.MinValue || value > Int64.MaxValue)
+            if (value < long.MinValue || value > long.MaxValue)
             {
                 throw new ArgumentOutOfRangeException("value",
                                                       value,
                                                       "Money value must be between " +
-                                                      Int64.MinValue + " and " +
-                                                      Int64.MaxValue);
+                                                      long.MinValue + " and " +
+                                                      long.MaxValue);
             }
         }
 
@@ -792,12 +634,8 @@
             }
         }
 
-        private String getDebugView()
-        {
-            return ToString() +
-                   String.Format(" ({0} {1})",
-                                 ToDecimal(CultureInfo.CurrentCulture),
-                                 Currency == Currency.None ? "<Unspecified Currency>" : Currency.Name);
-        }
+        private string getDebugView() =>
+            ToString() +
+            $" ({ToDecimal(CultureInfo.CurrentCulture)} {(Currency == Currency.None ? "<Unspecified Currency>" : Currency.Name)})";
     }
 }

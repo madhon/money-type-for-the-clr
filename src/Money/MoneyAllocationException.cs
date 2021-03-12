@@ -8,11 +8,11 @@
     {
         private readonly Money _amountToDistribute;
         private readonly Money _distributionTotal;
-        private readonly Decimal[] _distribution;
+        private readonly decimal[] _distribution;
 
         public MoneyAllocationException(Money amountToDistribute,
                                         Money distributionTotal,
-                                        Decimal[] distribution)
+                                        decimal[] distribution)
         {
             _amountToDistribute = amountToDistribute;
             _distribution = distribution;
@@ -21,8 +21,8 @@
 
         public MoneyAllocationException(Money amountToDistribute,
                                         Money distributionTotal,
-                                        Decimal[] distribution,
-                                        String message)
+                                        decimal[] distribution,
+                                        string message)
             : base(message)
         {
             _amountToDistribute = amountToDistribute;
@@ -32,8 +32,8 @@
 
         public MoneyAllocationException(Money amountToDistribute,
                                         Money distributionTotal,
-                                        Decimal[] distribution,
-                                        String message,
+                                        decimal[] distribution,
+                                        string message,
                                         Exception inner)
             : base(message, inner)
         {
@@ -50,23 +50,14 @@
                                                        typeof(Money));
             _distributionTotal = (Money)info.GetValue("_distributionTotal",
                                                       typeof(Money));
-            _distribution = (Decimal[])info.GetValue("_distribution",
-                                                     typeof(Decimal[]));
+            _distribution = (decimal[])info.GetValue("_distribution",
+                                                     typeof(decimal[]));
         }
 
-        public Decimal[] Distribution
-        {
-            get { return _distribution; }
-        }
+        public decimal[] Distribution => _distribution;
 
-        public Money DistributionTotal
-        {
-            get { return _distributionTotal; }
-        }
+        public Money DistributionTotal => _distributionTotal;
 
-        public Money AmountToDistribute
-        {
-            get { return _amountToDistribute; }
-        }
+        public Money AmountToDistribute => _amountToDistribute;
     }
 }

@@ -10,7 +10,7 @@
     ///     amounts can be compared and arithmetic can be performed.
     /// </summary>
     [Serializable]
-    public struct Currency : IEquatable<Currency>, IFormatProvider
+    public readonly struct Currency : IEquatable<Currency>, IFormatProvider
     {
         #region Static Currency Fields
 
@@ -870,29 +870,29 @@
 
         #endregion
 
-        private static readonly Dictionary<Int32, CurrencyTableEntry> _currencies
-            = new Dictionary<Int32, CurrencyTableEntry>();
+        private static readonly Dictionary<int, CurrencyTableEntry> _currencies
+            = new Dictionary<int, CurrencyTableEntry>();
 
-        private static readonly Dictionary<String, Int32> _codeIndex
-            = new Dictionary<String, Int32>(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, int> _codeIndex
+            = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
 
-        private static readonly Dictionary<String, List<Int32>> _symbolIndex
-            = new Dictionary<String, List<Int32>>(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, List<int>> _symbolIndex
+            = new Dictionary<string, List<int>>(StringComparer.InvariantCultureIgnoreCase);
 
-        private static readonly Dictionary<Int32, Int32> _lcidToIsoCodeLookup
-            = new Dictionary<Int32, Int32>();
+        private static readonly Dictionary<int, int> _lcidToIsoCodeLookup
+            = new Dictionary<int, int>();
 
-        private static readonly Dictionary<Int32, List<Int32>> _isoCodeToLcidLookup
-            = new Dictionary<Int32, List<Int32>>();
+        private static readonly Dictionary<int, List<int>> _isoCodeToLcidLookup
+            = new Dictionary<int, List<int>>();
 
-        private readonly Int32 _id;
+        private readonly int _id;
 
         static Currency()
         {
             var cultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
 
-            var cultureIdLookup = new Dictionary<String, List<Int32>>();
-            var symbolLookup = new Dictionary<String, String>();
+            var cultureIdLookup = new Dictionary<string, List<int>>();
+            var symbolLookup = new Dictionary<string, string>();
 
             foreach (var culture in cultures)
             {
@@ -902,7 +902,7 @@
 
                 if (!cultureIdLookup.ContainsKey(isoSymbol))
                 {
-                    cultureIdLookup[isoSymbol] = new List<Int32>();
+                    cultureIdLookup[isoSymbol] = new List<int>();
                 }
 
                 cultureIdLookup[isoSymbol].Add(lcid);
@@ -1503,7 +1503,7 @@
             Xxx = new Currency(999);
         }
 
-        public Currency(Int32 isoCurrencyCode)
+        public Currency(int isoCurrencyCode)
         {
             if (isoCurrencyCode != 0 && !_currencies.ContainsKey(isoCurrencyCode))
             {
@@ -1516,7 +1516,7 @@
             _id = isoCurrencyCode;
         }
 
-        public Currency(String iso3LetterCodeOrSymbol)
+        public Currency(string iso3LetterCodeOrSymbol)
         {
             Currency parsed;
 
@@ -1529,7 +1529,7 @@
             _id = parsed._id;
         }
 
-        public String Name
+        public string Name
         {
             get
             {
@@ -1538,7 +1538,7 @@
             }
         }
 
-        public String Symbol
+        public string Symbol
         {
             get
             {
@@ -1547,7 +1547,7 @@
             }
         }
 
-        public String Iso3LetterCode
+        public string Iso3LetterCode
         {
             get
             {
@@ -1556,7 +1556,7 @@
             }
         }
 
-        public Int32 IsoNumericCode
+        public int IsoNumericCode
         {
             get
             {
@@ -1591,9 +1591,7 @@
         /// </returns>
         public static Currency FromCultureInfo(CultureInfo cultureInfo)
         {
-            Int32 currencyId;
-
-            if (_lcidToIsoCodeLookup.TryGetValue(cultureInfo.LCID, out currencyId))
+            if (_lcidToIsoCodeLookup.TryGetValue(cultureInfo.LCID, out var currencyId))
             {
                 return new Currency(currencyId);
             }
@@ -1610,7 +1608,7 @@
         ///     The <see cref="Currency" /> which corresponds
         ///     to the ISO 4217 3-letter <paramref name="code" />.
         /// </returns>
-        public static Currency FromIso3LetterCode(String code)
+        public static Currency FromIso3LetterCode(string code)
         {
             return new Currency(code);
         }
@@ -1623,7 +1621,7 @@
         /// <returns>
         ///     <see langword="true" /> if they are equal; <see langword="false" /> otherwise.
         /// </returns>
-        public static Boolean operator ==(Currency left, Currency right)
+        public static bool operator ==(Currency left, Currency right)
         {
             return left.Equals(right);
         }
@@ -1636,28 +1634,25 @@
         /// <returns>
         ///     <see langword="true" /> if they are not equal; <see langword="false" /> otherwise.
         /// </returns>
-        public static Boolean operator !=(Currency left, Currency right)
+        public static bool operator !=(Currency left, Currency right)
         {
             return !left.Equals(right);
         }
 
-        public static Boolean TryParse(String s, out Currency currency)
+        public static bool TryParse(string s, out Currency currency)
         {
             currency = None;
 
-            Int32 currencyId;
-
             s = s.Trim();
 
-            if (_codeIndex.TryGetValue(s, out currencyId))
+            if (_codeIndex.TryGetValue(s, out var currencyId))
             {
                 currency = new Currency(currencyId);
                 return true;
             }
 
-            List<Int32> currencyIdList;
 
-            if (_symbolIndex.TryGetValue(s, out currencyIdList))
+            if (_symbolIndex.TryGetValue(s, out List<int> currencyIdList))
             {
                 if (_lcidToIsoCodeLookup.TryGetValue(Thread.CurrentThread.CurrentCulture.LCID, out currencyId) &&
                     !currencyIdList.Contains(currencyId))
@@ -1672,12 +1667,27 @@
             return false;
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
             return unchecked(609502847 ^ _id.GetHashCode());
         }
+        
+        public override string ToString()
+        {
+            return $"{Name} ({Iso3LetterCode})";
+        }
 
-        public override Boolean Equals(Object obj)
+        private static CurrencyTableEntry getEntry(int id)
+        {
+            if (!_currencies.TryGetValue(id, out var entry))
+            {
+                throw new InvalidOperationException("Unknown currency: " + id);
+            }
+
+            return entry;
+        }
+
+        public override bool Equals(object obj)
         {
             if (!(obj is Currency))
             {
@@ -1688,35 +1698,12 @@
             return Equals(other);
         }
 
-        public override String ToString()
-        {
-            return String.Format("{0} ({1})", Name, Iso3LetterCode);
-        }
-
-        private static CurrencyTableEntry getEntry(Int32 id)
-        {
-            CurrencyTableEntry entry;
-
-            if (!_currencies.TryGetValue(id, out entry))
-            {
-                throw new InvalidOperationException("Unknown currency: " + id);
-            }
-
-            return entry;
-        }
-
-        #region IEquatable<Currency> Members
-
-        public Boolean Equals(Currency other)
+        public bool Equals(Currency other)
         {
             return _id == other._id;
         }
 
-        #endregion
-
-        #region IFormatProvider Members
-
-        public Object GetFormat(Type formatType)
+        public object GetFormat(Type formatType)
         {
             if (formatType != typeof(NumberFormatInfo))
             {
@@ -1732,19 +1719,17 @@
             return new CultureInfo(lcid).NumberFormat;
         }
 
-        #endregion
-
         private struct CurrencyTableEntry : IEquatable<CurrencyTableEntry>
         {
-            internal readonly String Iso3LetterCode;
-            internal readonly UInt16 IsoNumberCode;
-            internal readonly String Name;
-            internal readonly String Symbol;
+            internal readonly string Iso3LetterCode;
+            internal readonly ushort IsoNumberCode;
+            internal readonly string Name;
+            internal readonly string Symbol;
 
-            internal CurrencyTableEntry(String name,
-                                        String iso3LetterCode,
-                                        UInt16 isoNumberCode,
-                                        String symbol)
+            internal CurrencyTableEntry(string name,
+                                        string iso3LetterCode,
+                                        ushort isoNumberCode,
+                                        string symbol)
             {
                 Name = name;
                 Iso3LetterCode = iso3LetterCode;
@@ -1752,24 +1737,19 @@
                 Symbol = symbol;
             }
 
-            #region IEquatable<CurrencyTableEntry> Members
-
-            public Boolean Equals(CurrencyTableEntry other)
+            public bool Equals(CurrencyTableEntry other)
             {
                 return IsoNumberCode == other.IsoNumberCode;
             }
 
-            #endregion
         }
     }
 
     internal static class DictionaryExtensions
     {
-        public static String GetValueOrDefault(this IDictionary<String, String> table, String key)
+        public static string GetValueOrDefault(this IDictionary<string, string> table, string key)
         {
-            String value;
-
-            return !table.TryGetValue(key, out value) ? null : value;
+            return !table.TryGetValue(key, out var value) ? null : value;
         }
     }
 }
